@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
   })
 
   let keylogs = []
-  let sendUp = false
+  let sendUp = true
   window.addEventListener("keydown", function(event) {
     keylogs.push(event.key)
     if ((keylogs[keylogs.length - 2] == 'Shift') && (keylogs[keylogs.length-1] == '*')) {
