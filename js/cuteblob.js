@@ -8,6 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
     blob = new createBlob
+    
+    blobbyArray = []
+    starArray = []
+
+    for (let i = 0; i < 1; i ++) {
+      blobbyArray.push(new createBlob)
+    }
+    for (let i = 0; i < 20; i ++) {
+      starArray.push(new createStar)
+    }
   })
 
   window.addEventListener('mousemove', function(event) {
@@ -29,6 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })
 
+  let keylogs = []
+  let sendUp = false
+  window.addEventListener("keydown", function(event) {
+    keylogs.push(event.key)
+    if ((keylogs[keylogs.length - 2] == 'Shift') && (keylogs[keylogs.length-1] == '*')) {
+      sendUp = true
+      console.log('ready?')
+    }
+  })
 
 
   let mouse = {
@@ -45,6 +64,22 @@ document.addEventListener('DOMContentLoaded', function() {
   let poppedMouse = 0
   let direction = false
   let getDir = []
+
+  function createStar() {
+    this.radius = 3
+    this.x = canvas.width * Math.random();
+    this.y = canvas.height * Math.random();
+    this.spawn = function() {
+      c.beginPath()
+      c.arc(this.x,this.y,this.radius,0, Math.PI*2, false)
+      c.fillStyle = 'white';
+      c.shadowBlur = 70;
+      c.shadowColor = "white";
+      c.fill()
+      c.stroke()
+
+    }
+  }
 
   function createBlob() {
     this.radius = 50;
@@ -73,14 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
       c.fill()
       c.stroke()
     }
-    this.particulate = function() {
-      c.beginPath()
-      c.arc(this.x, this.y, 100, 0, Math.PI*2, false)
-      c.fillStyle('red')
-      c.fill()
-      c.stroke()
-
-    }
     this.update = function() {
       // if ball goes of border
       if ((this.x - this.radius) > window.innerWidth) {
@@ -95,8 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (this.still) {
           if (this.velx > 0) {
             this.velx -= 0.3
-            if (Math.abs(this.velx < 0.31)) {
+            if (Math.abs(this.velx) < 0.31) {
               this.still = false
+              
             }
           } else if (this.velx < 0) {
             this.velx += 0.3
@@ -112,9 +140,14 @@ document.addEventListener('DOMContentLoaded', function() {
       } 
       if (!this.stick) {
       // this x vel is fine
-      this.x += this.velx
-      this.y += this.vely
-      this.vely += this.gravity
+      if (!sendUp) {
+        this.x += this.velx
+        this.y += this.vely
+        this.vely += this.gravity
+      } else {
+        this.x = innerWidth * 0.8
+        this.y = innerHeight * 0.2
+      }
       if ((0.1 < Math.abs(this.vely)) && (this.y + this.radius < window.innerHeight)){
         this.repeatBounce.push(this.y) 
       }
@@ -141,6 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (this.stick) {
         // sets direction
         // problem function
+        sendUp = false
         this.countBounce = []
         mouseXCount.push('');
         if (mouseXCount.length >= 3) {
@@ -170,16 +204,24 @@ document.addEventListener('DOMContentLoaded', function() {
           this.vely = (mouseArrY[mouseArrY.length - 1] / 10) * (this.directY ? -1 : 1);
           
         }
+
+
+
         }
         
     }
   }
 
   let blobbyArray = []
+  let starArray = []
 
   for (let i = 0; i < 1; i ++) {
     blobbyArray.push(new createBlob)
   }
+  for (let i = 0; i < 20; i ++) {
+    starArray.push(new createStar)
+  }
+
 
 
   let blobX = []
@@ -190,8 +232,12 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let blob of blobbyArray) {
       blob.spawn()
       blob.update()
-      
     }
+    for (let str of starArray) {
+      str.spawn()
+    }
+
+    
     
   }
 
