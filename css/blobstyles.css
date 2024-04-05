@@ -4,9 +4,11 @@ canvas {
   z-index: -1;
   width: 100vw;
   height: auto;
+  
 }
 
 body {
   margin: 0;
   overflow: hidden;
 }
+

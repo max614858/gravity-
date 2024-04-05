@@ -4,12 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link href="css/blobstyles.css" rel="stylesheet"/>
+  <link href="css/intro.css" rel="stylesheet"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Madimi+One&family=Short+Stack&display=swap" rel="stylesheet">
 </head>
 <body>
-  
-
   <canvas></canvas>
-  <script src="js/cuteblob.js"></script>
+  <audio id="butSoundEf" type="audio/wav" style="display: none;"><source src="sounds/hitstart.wav"></audio>
+  <div>
+    <h1 id="title">GRABtheMOON</h1>
+    <button id="startbut" onclick="window.location$='grabthemoon.html'; ">START</button>
+  </div>
+  <script src="js/titlescreen.js" defer></script>
 </body>
 </html>

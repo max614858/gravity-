@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+  let stuckSound = document.getElementById('ballstuck')
+  let unstuckSound = document.getElementById('unstuck')
+  let hit = document.getElementById('hit')
+
   window.addEventListener('resize', function() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -31,9 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
       case true:
         mouse.down = false
         console.log(mouse.down)
+        unstuckSound.play()
         break;
       case false:
         mouse.down = true
+        stuckSound.play()
         console.log(mouse.down)
         break;
     }
@@ -46,6 +52,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if ((keylogs[keylogs.length - 2] == 'Shift') && (keylogs[keylogs.length-1] == '*')) {
       sendUp = true
       console.log('ready?')
+    }
+    console.log(event.key)
+  })
+
+  window.addEventListener('wheel', function(event) {
+    switch(event.deltaY < 0) {
+      case true:
+        for (let i of blobbyArray) {
+          i.gravity -= 0.1
+        }
+        break;
+      case false:
+        for (let i of blobbyArray) {
+          i.gravity += 0.1
+        }
+        break;
     }
   })
 
@@ -68,16 +90,27 @@ document.addEventListener('DOMContentLoaded', function() {
   function createStar() {
     this.radius = 3
     this.x = canvas.width * Math.random();
-    this.y = canvas.height * Math.random();
+    this.y = canvas.height/1.1 * Math.random();
+    this.opacity = 0
+
+    this.rand = (Math.random() * 2) + 0.1
     this.spawn = function() {
       c.beginPath()
       c.arc(this.x,this.y,this.radius,0, Math.PI*2, false)
-      c.fillStyle = 'white';
+      c.fillStyle = 'rgba(255,255,255,' +`${this.opacity}` + ")"
+      c.strokeStyle = 'rgba(255,255,255,' +`${this.opacity}` + ")"
       c.shadowBlur = 70;
       c.shadowColor = "white";
+  
       c.fill()
       c.stroke()
-
+    }
+    this.move = function() {
+      this.x += this.rand
+      if ((this.x - this.radius) > canvas.width) {
+        this.x = 0 - this.radius
+        this.rand = (Math.random() * 2) + 0.1
+      }
     }
   }
 
@@ -90,7 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
     this.velx = 0
     this.vely = 0
     this.stick = false
-    this.still = true
+    this.still = false
+    this.opacity = 0
     this.mouseArray = []
     this.direction = false
     this.directY = false
@@ -101,10 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
     this.spawn = function() {
       c.beginPath()
       c.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
-      c.fillStyle = 'rgb(255,255,255)'
-      c.shadowBlur = 70;
+      c.fillStyle = 'rgba(255,255,255,' +`${this.opacity}` + ")"
+      c.strokeStyle = 'rgba(255,255,255,' +`${this.opacity}` + ")"
+
+      c.shadowBlur = 90;
       c.shadowColor = "white";
-      c.strokeStyle = 'rgb(255,255,255)'
+      
       c.fill()
       c.stroke()
     }
@@ -120,14 +156,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!mouse.down) {
         this.stick = false;
         if (this.still) {
-          if (this.velx > 0) {
-            this.velx -= 0.3
-            if (Math.abs(this.velx) < 0.31) {
-              this.still = false
-              
-            }
-          } else if (this.velx < 0) {
-            this.velx += 0.3
+          if (this.velx > 0.5) {
+            this.velx -= 0.15}
+          else if (this.velx < -0.5) {
+            this.velx += 0.15
+          } else {
+            this.velx = 0
           }}
 
       }
@@ -155,6 +189,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
       if (this.y > window.innerHeight - this.radius) {
         this.vely *= -0.67
+        //external to class (careful!)
+        if (!this.still) {
+          hit.play()
+        }
         this.y = window.innerHeight - this.radius
         this.stopBounce = window.innerHeight - this.repeatBounce[this.repeatBounce.length - 1]
         this.countBounce.push(this.stopBounce)
@@ -162,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
           this.vely *= 0.85
         }
         if (this.countBounce.length > (this.bounceLim + 1)) {
-          this.vely *= 0.6
+          this.vely *= 0.8
         }
         if (this.countBounce.length > (this.bounceLim + 2)) {
           this.vely = 0
@@ -174,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (this.stick) {
         // sets direction
         // problem function
+        this.still = false
         sendUp = false
         this.countBounce = []
         mouseXCount.push('');
@@ -218,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
   for (let i = 0; i < 1; i ++) {
     blobbyArray.push(new createBlob)
   }
-  for (let i = 0; i < 20; i ++) {
+  for (let i = 0; i < 30; i ++) {
     starArray.push(new createStar)
   }
 
@@ -232,9 +271,17 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let blob of blobbyArray) {
       blob.spawn()
       blob.update()
+      if (blob.opacity < 1) {
+        blob.opacity += 0.006
+      }
+      
     }
     for (let str of starArray) {
       str.spawn()
+      str.move()
+      if (str.opacity < 1) {
+        str.opacity += 0.006
+      }
     }
 
     
