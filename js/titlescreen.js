@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let startBut = document.getElementById('startbut')
   let titleElements = title.innerHTML.split("");
   let buttonSoundEffect = document.getElementById('butSoundEf')
+  let shortcuts = document.getElementById('hotkeys')
   let starting = false
   console.log('ready!')
   startBut.addEventListener('click', function() {
@@ -21,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     let titleAnim = title.animate(fade, options)
+    shortcuts.animate(fade, options)
     let startAnim = startBut.animate(fade, options)
+
     starting=true
     console.log(starting)
     startBut.disabled = true
@@ -67,7 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('resize', function() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
-
+    starArray = []
+    for (let i = 0; i < 25; i++) {
+      starArray.push(new createStar)
+    }
   })
 
   let starArray = []

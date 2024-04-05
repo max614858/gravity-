@@ -32,8 +32,8 @@ h1 {
 
 button {
   margin: 0;
-  width: 20vw;
-  height: 10vh;
+  width: 350px;
+  height: 88px;
   font-size: 50px;
   font-family: "Madimi One", sans-serif;
   border-radius: 100px;
@@ -59,6 +59,12 @@ button:hover {
 button:active {
   background-color: rgb(20, 20, 20);
   align-items: last baseline;
+}
+
+#hotkeys {
+  margin-top: 20px;
+  width: 400px;
+  height: 88px;
 }
 
 body {

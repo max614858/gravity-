@@ -49,11 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
   let sendUp = true
   window.addEventListener("keydown", function(event) {
     keylogs.push(event.key)
+    console.log(event.key)
     if ((keylogs[keylogs.length - 2] == 'Shift') && (keylogs[keylogs.length-1] == '*')) {
       sendUp = true
       console.log('ready?')
     }
-    console.log(event.key)
+    if (event.key == 'Backspace' || event.key == 'Alt') {
+      window.location = 'index.html'
+    }
   })
 
   window.addEventListener('wheel', function(event) {
