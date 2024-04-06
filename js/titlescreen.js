@@ -6,7 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
   let buttonSoundEffect = document.getElementById('butSoundEf')
   let shortcuts = document.getElementById('hotkeys')
   let starting = false
+  let firstClick = false
+  let shortCanvas;
+  let s;
+
   console.log('ready!')
+
+  shortcuts.addEventListener('click', function() {
+    window.location = "shortcuts.html"
+
+
+
+  })
+
   startBut.addEventListener('click', function() {
     buttonSoundEffect.play()
     const fade = [
